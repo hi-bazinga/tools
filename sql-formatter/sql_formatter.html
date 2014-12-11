@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Code Formatter</title>
+    <style type="text/css">
+      div { margin: 10px; }
+    </style>
+
+    <script type="text/javascript">
+		function formatSql(){
+		  var content = document.getElementById("input_box").value;
+	      var arr = content.split("\n");
+
+	      // format the first line
+	      var result = 'String sql = " ' + arr[0] + ' "' + (arr.length > 1 ? ' \+\n' : ';');
+
+	      // format remaining line
+	      for (var i = 1; i < arr.length; i ++) {
+	      	var tmp = arr[i].replace(/^/, '             \" ');
+
+	      	if (i == arr.length - 1) {
+	        	tmp = tmp.replace(/( *?)$/, ' \"\;');
+	      	} else {
+				tmp = tmp.replace(/( *?)$/, ' \" \+\n');
+	      	}
+
+	        result += tmp;
+	      }
+
+	      // upper SQL keywords
+	      var keywords = ['select','distinct','as','from','where','join','left','right',
+		  				  'on','and','or','order by','asc','desc','group by','having']
+
+		  for (var i = 0; i < keywords.length; i ++) {
+		  	var regex = eval("/\\b" + keywords[i] + "\\b/ig");
+		  	console.log(regex);
+		    result = result.replace(regex, keywords[i].toUpperCase());
+		  }
+
+	      document.getElementById("output_box").value = result;
+  		};  
+
+    </script>
+  </head>
+
+  <body>
+	<div>
+	  <textarea id="input_box" rows="20" cols="150" placeholder="input SQL here..."></textarea>
+	</div>
+	<div>
+	  <textarea id="output_box" rows="20" cols="150"></textarea>
+	</div>
+	<div>
+	  <select id="from_select">
+	    <option value="SQL">SQL</option>
+	  </select>
+	   to 
+	  <select id="to_select">
+	    <option value="JAVA">Java</option>
+	  </select>	
+	</div>
+	<div>
+	  <input id="format_btn" type="button" value="Format" onclick="formatSql()"/>
+	</div>
+  </body>
+</html>
